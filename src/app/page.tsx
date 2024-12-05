@@ -17,87 +17,123 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAuth } from "firebase/auth";
-import { auth, app } from "../../firebase";
-
+import { firestore, app } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 const products = [
   {
-    id: 1,
+    id: "1",
     name: "Classic T-Shirt",
     price: 19.99,
     image: "/placeholder.svg",
     type: "Top",
     size: "M",
+    quantity: 5,
     gender: "Unisex",
   },
   {
-    id: 2,
+    id: "2",
     name: "Slim Fit Jeans",
     price: 49.99,
     image: "/placeholder.svg",
     type: "Bottom",
     size: "32",
+    quantity: 5,
     gender: "Men",
   },
   {
-    id: 3,
+    id: "3",
     name: "Cozy Sweater",
     price: 39.99,
     image: "/placeholder.svg",
     type: "Top",
+    quantity: 5,
     size: "L",
     gender: "Women",
   },
   {
-    id: 4,
+    id: "4",
     name: "Summer Dress",
     price: 29.99,
     image: "/placeholder.svg",
     type: "Dress",
     size: "S",
+    quantity: 5,
     gender: "Women",
   },
   {
-    id: 5,
+    id: "5",
     name: "Leather Jacket",
     price: 99.99,
     image: "/placeholder.svg",
     type: "Outerwear",
     size: "XL",
+    quantity: 5,
     gender: "Unisex",
   },
   {
-    id: 6,
+    id: "6",
     name: "Athletic Shorts",
     price: 24.99,
     image: "/placeholder.svg",
     type: "Bottom",
     size: "M",
+    quantity: 5,
     gender: "Unisex",
   },
 ];
 
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  type: string;
+  size: string;
+  quantity: number;
+  gender: string;
+};
+
 export default function Home() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<typeof products>([]);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [items, setItems] = useState<Product[]>([]);
+  const [isFetched, setIsFetched] = useState(false);
   const router = useRouter();
   const auth = getAuth(app);
   const user = auth.currentUser;
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
+    if (!isFetched) {
+      fetchProducts();
+      setIsFetched(true); 
     }
-  }, [router]);
+    console.log("Updated Items: ", items);
 
-  const addToCart = (product: (typeof products)[0]) => {
+  }, [items]);
+
+  
+  const fetchProducts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(firestore, "produtos"));
+      const data: Product[] = querySnapshot.docs.map((doc) => ({
+        ...(doc.data() as Product),
+      }));
+      setItems(data);
+    } catch (error) {
+      console.log("Error trying to fetch products: ", error);
+    }
+  };
+
+  const addToCart = (product: Product) => {
     setCartItems([...cartItems, product]);
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
+  
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -105,7 +141,7 @@ export default function Home() {
         <div className="relative flex-grow">
           <Input
             type="search"
-            placeholder="Search for products..."
+            placeholder="Pesquisar produtos..."
             className="pl-10 pr-4"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -114,7 +150,7 @@ export default function Home() {
           <DropdownMenuTrigger asChild>
             <Button>
               <Filter className="mr-2 h-4 w-4" />
-              Filter
+              Filtrar
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -143,16 +179,15 @@ export default function Home() {
             <DropdownMenuGroup>
               <DropdownMenuItem>Men</DropdownMenuItem>
               <DropdownMenuItem>Women</DropdownMenuItem>
-              <DropdownMenuItem>Unisex</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {items.map((items) => (
           <ProductCard
-            key={product.id}
-            product={product}
+            key={items.id}
+            product={items}
             onAddToCart={addToCart}
           />
         ))}

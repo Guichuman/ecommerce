@@ -13,7 +13,7 @@ export default function Header() {
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-gray-800">
-          Stylish Threads
+          Ecommerce
         </Link>
         <div className="flex items-center space-x-4">
           <Link href="/login">
@@ -24,7 +24,7 @@ export default function Header() {
           </Link>
           <Button variant="outline" className="relative" onClick={() => setIsCartOpen(true)}>
             <ShoppingCart className="mr-2 h-4 w-4" />
-            Cart
+            Carrinho
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {cartItems.length}
             </span>

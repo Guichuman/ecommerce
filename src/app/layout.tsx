@@ -6,7 +6,7 @@ import Header from '../components/Header'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Stylish Threads',
+  title: 'Ecommerce',
   description: 'Your one-stop shop for trendy clothing',
 }
 
