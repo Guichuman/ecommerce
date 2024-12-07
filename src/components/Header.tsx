@@ -4,10 +4,11 @@ import { ShoppingCart, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import CartDrawer from './CartDrawer'
+import { useCart } from '@/app/context/CartContext';
 
 export default function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false)
-  const [cartItems, setCartItems] = useState([])
+  const { cartItems } = useCart();
 
   return (
     <header className="bg-white shadow-md">
