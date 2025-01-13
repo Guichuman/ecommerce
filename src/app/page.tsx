@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "../app/components/ui/input";
+import { Button } from "../app/components/ui/button";
 import { Filter, Search, ChevronDown } from "lucide-react";
-import ProductCard from "../components/ProductCard";
-import CartDrawer from "../components/CartDrawer";
+import ProductCard from "./components/ProductCard";
+import CartDrawer from "./components/CartDrawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,74 +15,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/components/ui/dropdown-menu";
 import { getAuth } from "firebase/auth";
 import { firestore, app } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useCart } from "./context/CartContext";
-
-const products = [
-  {
-    id: "1",
-    name: "Classic T-Shirt",
-    price: 19.99,
-    image: "/placeholder.svg",
-    type: "Top",
-    size: "M",
-    quantity: 5,
-    gender: "Unisex",
-  },
-  {
-    id: "2",
-    name: "Slim Fit Jeans",
-    price: 49.99,
-    image: "/placeholder.svg",
-    type: "Bottom",
-    size: "32",
-    quantity: 5,
-    gender: "Men",
-  },
-  {
-    id: "3",
-    name: "Cozy Sweater",
-    price: 39.99,
-    image: "/placeholder.svg",
-    type: "Top",
-    quantity: 5,
-    size: "L",
-    gender: "Women",
-  },
-  {
-    id: "4",
-    name: "Summer Dress",
-    price: 29.99,
-    image: "/placeholder.svg",
-    type: "Dress",
-    size: "S",
-    quantity: 5,
-    gender: "Women",
-  },
-  {
-    id: "5",
-    name: "Leather Jacket",
-    price: 99.99,
-    image: "/placeholder.svg",
-    type: "Outerwear",
-    size: "XL",
-    quantity: 5,
-    gender: "Unisex",
-  },
-  {
-    id: "6",
-    name: "Athletic Shorts",
-    price: 24.99,
-    image: "/placeholder.svg",
-    type: "Bottom",
-    size: "M",
-    quantity: 5,
-    gender: "Unisex",
-  },
-];
 
 type Product = {
   id: string;
@@ -93,6 +30,7 @@ type Product = {
   size: string;
   quantity: number;
   gender: string;
+  selectedQuantity: number;
 };
 
 export default function Home() {
@@ -164,8 +102,17 @@ export default function Home() {
   };
 
   const addToCart = (product: Product) => {
-    setCartItems([...cartItems, product]);
+    const productWithQuantity = { ...product, selectedQuantity: 1 };
+    setCartItems([...cartItems, productWithQuantity]);
     setIsCartOpen(true);
+  };
+
+  const updateQuantity = (id: string, selectedQuantity: number) => {
+    setCartItems((prevCartItems) =>
+      prevCartItems.map((item) =>
+        item.id === id ? { ...item, selectedQuantity } : item
+      )
+    );
   };
 
   const removeFromCart = (id: string) => {
@@ -181,7 +128,9 @@ export default function Home() {
             placeholder="Pesquisar produtos..."
             className="pl-10 pr-4"
             value={searchTerm}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
@@ -263,6 +212,7 @@ export default function Home() {
         setIsOpen={setIsCartOpen}
         cartItems={cartItems}
         onRemove={removeFromCart}
+        onUpdateQuantity={updateQuantity}
       />
     </main>
   );

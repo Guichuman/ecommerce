@@ -1,8 +1,8 @@
 
 import Image from 'next/image'
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardFooter } from "../components/ui/card"
+import { Button } from "../components/ui/button"
+import { Badge } from "@/app/components/ui/badge"
 
 interface ProductCardProps {
   product: {
@@ -14,6 +14,7 @@ interface ProductCardProps {
     size: string
     quantity: number
     gender: string
+    selectedQuantity: number;
   }
   onAddToCart: (product: ProductCardProps['product']) => void
 }
@@ -32,7 +33,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       </CardContent>
       <CardFooter className="flex flex-col items-start p-4">
         <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-        <p className="text-gray-600 mb-2 font-bold">${product.price.toFixed(2)}</p>
+        <p className="text-gray-600 mb-2 font-bold">R$ {product.price.toFixed(2)}</p>
         <div className="flex flex-wrap gap-2 mb-4 ">
           <Badge variant="secondary">{product.type}</Badge>
           <Badge variant="secondary">{product.size}</Badge>

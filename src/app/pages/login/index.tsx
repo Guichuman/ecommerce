@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/app/components/ui/label";
 import {
   Card,
   CardContent,
@@ -12,8 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Facebook, Github } from "lucide-react";
-import { signInWithGoogle, signInWithFacebook } from "../api/auth";
-// auth.ts
+import { signInWithGoogle, signInWithFacebook } from "../../api/auth";
+
 import {
   Auth,
   signInWithPopup,
@@ -23,7 +23,7 @@ import {
   getAuth,
   signInWithRedirect,
 } from "firebase/auth";
-import { auth, app } from "../../../firebase";
+import { auth, app } from "../../../../firebase";
 import { useRouter } from 'next/navigation'
 
 type SignInResult = {
@@ -45,7 +45,7 @@ const signInWithProvider = async (
   provider: GoogleAuthProvider | FacebookAuthProvider
 ): Promise<SignInResult> => {
   try {
-    const result = await signInWithPopup(auth, provider); // Direct popup trigger
+    const result = await signInWithPopup(auth, provider); 
     return { user: result.user, error: null };
   } catch (error) {
     console.error("Sign-In Error:", error);
@@ -94,7 +94,7 @@ const handleOAuthLogin = async (provider: "google" | "facebook") => {
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="email@email.com"
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setEmail(e.target.value)
@@ -107,7 +107,7 @@ const handleOAuthLogin = async (provider: "google" | "facebook") => {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="**************"
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setPassword(e.target.value)
@@ -127,7 +127,7 @@ const handleOAuthLogin = async (provider: "google" | "facebook") => {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                Ou entre com
               </span>
             </div>
           </div>
