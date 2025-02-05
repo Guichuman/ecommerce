@@ -17,12 +17,6 @@ export default function Header() {
           Ecommerce
         </Link>
         <div className="flex items-center space-x-4">
-          <Link href="/login">
-            <Button variant="ghost">
-              <User className="mr-2 h-4 w-4" />
-              Login
-            </Button>
-          </Link>
           <Button
             variant="outline"
             className="relative"

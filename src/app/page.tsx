@@ -53,7 +53,6 @@ export default function Home() {
       fetchProducts();
       setIsFetched(true);
     }
-    console.log("Updated Items: ", items);
   }, [items]);
 
   useEffect(() => {
